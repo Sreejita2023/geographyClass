@@ -1,6 +1,7 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { GameContext } from "../context/GameContext";
+import { useLocation } from "react-router-dom";
 import DraggableFlagsContainer from "./DraggableFlagsContainer";
 import EndMatchStats from "./EndMatchStats";
 import Footer from "./Footer";
@@ -17,6 +18,21 @@ export default function GameApp() {
     handleOnDragEnd,
     matchLocation,
   } = useContext(GameContext);
+  const [email, setEmail] = useState(null); // State to store the email
+  const location = useLocation(); // Access the current URL parameters
+
+  useEffect(() => {
+    // Extract the email from the query parameters in the URL
+    const queryParams = new URLSearchParams(location.search);
+    const emailParam = queryParams.get("email");
+
+    if (emailParam) {
+      setEmail(emailParam); // Store email in state
+      console.log("Email extracted from URL:", emailParam); // Debugging
+    } else {
+      console.log("No email found in URL");
+    }
+  }, [location]);
   return (
     <>
       <DragDropContext onDragEnd={(result) => handleOnDragEnd(result)}>
@@ -34,7 +50,7 @@ export default function GameApp() {
                 className="playAgainBtn"
                 onClick={() => setStartMatch(true)}
               >
-                Lets Play
+                Play
               </button>
               <HowToPlayBox />
             </>
@@ -51,6 +67,7 @@ export default function GameApp() {
               <figure className="locationBox">
                 <h1>Location:</h1>
                 <p>{matchLocation}</p>
+                {email && <p>Email: {email}</p>}
               </figure>
 
               <section className="gameplaySection">
