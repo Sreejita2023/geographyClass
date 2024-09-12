@@ -53,6 +53,11 @@ export default function GameApp() {
                 Play
               </button>
               <HowToPlayBox />
+              {email ? (
+                <p>Email: {email}</p>
+              ) : (
+                <p>Loading email...</p> // Display a placeholder while email is being fetched
+              )}
             </>
           ) : matchEnded ? (
             <>
@@ -67,7 +72,6 @@ export default function GameApp() {
               <figure className="locationBox">
                 <h1>Location:</h1>
                 <p>{matchLocation}</p>
-                {email && <p>Email: {email}</p>}
               </figure>
 
               <section className="gameplaySection">
