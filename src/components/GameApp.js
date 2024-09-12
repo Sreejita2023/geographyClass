@@ -34,7 +34,7 @@ export default function GameApp() {
                 className="playAgainBtn"
                 onClick={() => setStartMatch(true)}
               >
-                Play
+                Lets Play
               </button>
               <HowToPlayBox />
             </>
