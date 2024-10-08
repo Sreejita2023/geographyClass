@@ -1,6 +1,7 @@
-import { useContext ,useEffect} from "react";
+import { useContext, useState, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { GameContext } from "../context/GameContext";
+import { useLocation } from "react-router-dom";
 import DraggableFlagsContainer from "./DraggableFlagsContainer";
 import EndMatchStats from "./EndMatchStats";
 import Footer from "./Footer";
@@ -16,17 +17,32 @@ export default function GameApp() {
     setMatch,
     handleOnDragEnd,
     matchLocation,
-    guessedCountriesCounter
+    guessedCountriesCounter,
   } = useContext(GameContext);
 
+  const [email, setEmail] = useState(null); // State to store the email
+  const location = useLocation(); // Access the current URL parameters
   useEffect(() => {
-    // Only trigger the effect if matchEnded is true
+   
+    const queryParams = new URLSearchParams(location.search);
+    const emailParam = queryParams.get("email");
+
+    if (emailParam) {
+      setEmail(emailParam); // Store email in state
+      console.log("Email extracted from URL:", emailParam); // Debugging
+    } else {
+      // placing a demoEmail
+      setEmail("test@gmail.com");
+      console.log("No email found in URL");
+    }
+
+     // Only trigger the effect if matchEnded is true
     if (matchEnded) {
       console.log("Match has ended, executing the logic.");
 
       // logic for game success or failure
       const result = guessedCountriesCounter === 6 ? "win" : "lose";
-      console.log(result)
+      console.log(result);
       const updateSoloResults = async () => {
         try {
           // The data to be sent in the body of the request
@@ -44,7 +60,7 @@ export default function GameApp() {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                email: "test@gmail.com",
+                email: email,
                 result: result,
               }),
             }
@@ -56,11 +72,13 @@ export default function GameApp() {
 
             // Redirect to home page after 3 seconds (3000 milliseconds)
             setTimeout(() => {
-              window.location.href = `/?matchResult=${result}`;
+              window.location.href = `https://zealous-bush-02641ff00.5.azurestaticapps.net/?matchResult=${result}`;
             }, 3000);
           } else {
             // Handle HTTP errors by logging the status and statusText
-            console.error(`Failed to update match result: ${response.status} ${response.statusText}`);
+            console.error(
+              `Failed to update match result: ${response.status} ${response.statusText}`
+            );
           }
         } catch (error) {
           // Handle fetch or network errors
@@ -71,7 +89,8 @@ export default function GameApp() {
       // Call the function as soon as matchEnded is true
       updateSoloResults();
     }
-  }, [matchEnded, guessedCountriesCounter]);
+  }, [matchEnded, guessedCountriesCounter, location]);
+
   return (
     <>
       <DragDropContext onDragEnd={(result) => handleOnDragEnd(result)}>
@@ -92,6 +111,11 @@ export default function GameApp() {
                 Play
               </button>
               <HowToPlayBox />
+              {email ? (
+                <p>Email: {email}</p>
+              ) : (
+                <p>Loading email...</p> // Display a placeholder while email is being fetched
+              )}
             </>
           ) : matchEnded ? (
             <>
