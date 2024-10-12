@@ -23,7 +23,6 @@ export default function GameApp() {
   const [email, setEmail] = useState(null); // State to store the email
   const location = useLocation(); // Access the current URL parameters
   useEffect(() => {
-   
     const queryParams = new URLSearchParams(location.search);
     const emailParam = queryParams.get("email");
 
@@ -32,11 +31,10 @@ export default function GameApp() {
       console.log("Email extracted from URL:", emailParam); // Debugging
     } else {
       // placing a demoEmail
-      setEmail("test@gmail.com");
       console.log("No email found in URL");
     }
 
-     // Only trigger the effect if matchEnded is true
+    // Only trigger the effect if matchEnded is true
     if (matchEnded) {
       console.log("Match has ended, executing the logic.");
 
@@ -47,7 +45,7 @@ export default function GameApp() {
         try {
           // The data to be sent in the body of the request
           const data = {
-            email: "test@gmail.com", // Replace with actual player email
+            email: email, // Replace with actual player email
           };
           console.log(data);
 
@@ -72,7 +70,7 @@ export default function GameApp() {
 
             // Redirect to home page after 3 seconds (3000 milliseconds)
             setTimeout(() => {
-              window.location.href = `https://zealous-bush-02641ff00.5.azurestaticapps.net/?matchResult=${result}`;
+              window.location.href = `https://wonderful-water-0f9d54400.5.azurestaticapps.net/?matchResult=${result}`;
             }, 3000);
           } else {
             // Handle HTTP errors by logging the status and statusText
