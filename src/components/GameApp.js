@@ -84,7 +84,7 @@ export default function GameApp() {
 
             // Redirect to home page after 3 seconds (3000 milliseconds)
             setTimeout(() => {
-              window.location.href = `http://localhost:3000/?matchResult=${result}`;
+              window.location.href = `https://wonderful-water-0f9d54400.5.azurestaticapps.net/?matchResult=${result}`;
             }, 3000);
           } else {
             // Handle HTTP errors by logging the status and statusText
@@ -126,11 +126,6 @@ export default function GameApp() {
                 Play
               </button>
               <HowToPlayBox />
-              {email ? (
-                <p>Email: {email}</p>
-              ) : (
-                <p>Loading email...</p> // Display a placeholder while email is being fetched
-              )}
             </>
           ) : matchEnded ? (
             <>
