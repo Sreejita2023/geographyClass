@@ -39,7 +39,7 @@ export default function GameApp() {
       console.log("Match has ended, executing the logic.");
 
       // logic for game success or failure
-      const result = guessedCountriesCounter === 6 ? "win" : "lose";
+      const result = guessedCountriesCounter === 6 ? "win" : "loss";
       console.log(result);
       const updateSoloResults = async () => {
         try {
@@ -64,8 +64,22 @@ export default function GameApp() {
             }
           );
 
+          const response1 = await fetch(
+            "https://gamemateserver-ezf2bagbgbhrdcdt.westindia-01.azurewebsites.net/updateSoloDatabase",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: email,
+                result: result,
+              }),
+            }
+          );
+
           // Check if the response is successful
-          if (response.ok) {
+          if (response.ok && response1.ok) {
             console.log("Match result updated successfully.");
 
             // Redirect to home page after 3 seconds (3000 milliseconds)
@@ -76,6 +90,9 @@ export default function GameApp() {
             // Handle HTTP errors by logging the status and statusText
             console.error(
               `Failed to update match result: ${response.status} ${response.statusText}`
+            );
+            console.error(
+              `Failed to update database result: ${response1.status} ${response1.statusText}`
             );
           }
         } catch (error) {
